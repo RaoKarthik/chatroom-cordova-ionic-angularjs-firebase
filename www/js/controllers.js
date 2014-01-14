@@ -24,12 +24,6 @@ angular.module('chatRoom.controllers', [])
   $scope.rooms = [];
   var ref = new Firebase('https://chatroom-io.firebaseio.com/opened_rooms');  
   var promise = angularFire(ref, $scope, "rooms");
-
-  $scope.onRefresh = function() {    
-    var stop = $timeout(function() {            
-      $scope.$broadcast('scroll.refreshComplete');
-    }, 1000);
-  };
 })
 
 .controller('NewRoomCtrl', function($scope, $location, angularFire) {      

@@ -1,34 +1,48 @@
-angular.module('chatRoom', ['ionic', 'ngRoute', 'ngAnimate', 'chatRoom.services', 'chatRoom.controllers', 'firebase'])
+angular.module('chatRoom', ['ionic', 'chatRoom.services', 'chatRoom.controllers', 'firebase'])
 
 .config(function ($compileProvider){
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
 
-.config(function($routeProvider, $locationProvider) {
-  $routeProvider.when('/home', {
+.config(function($stateProvider, $urlRouterProvider) {
+  $stateProvider.state('home', {
+    url: '/home',
     templateUrl: 'templates/home.html',
     controller: 'MainCtrl'
   });
-  
-  $routeProvider.when('/rooms/new', {
-    templateUrl: 'templates/new_room.html',
-    controller: 'NewRoomCtrl'
-  });  
-  
-  $routeProvider.when('/rooms/:roomId', {
-    templateUrl: 'templates/room.html',
-    controller: 'RoomCtrl'
+
+  $stateProvider.state('rooms.new', {
+    url: '/rooms/new',
+    views: {
+      'rooms-new': {
+        templateUrl: 'templates/new_room.html',
+        controller: 'NewRoomCtrl'
+      }
+    }
   });
 
-  
-  $routeProvider.when('/about', {
-    templateUrl: 'templates/about.html',
-    controller: 'AboutCtrl'
-  });    
-  
-  $routeProvider.otherwise({
-    redirectTo: '/home'
+  $stateProvider.state('rooms.id', {
+    url: '/rooms/:roomId',
+    views: {
+      'rooms-id': {
+        templateUrl: 'templates/room.html',
+        controller: 'RoomCtrl'
+      }
+    }
   });
+  
+  $stateProvider.state('about', {
+    url: '/about',
+    views: {
+      'about': {
+        templateUrl: 'templates/about.html',
+        controller: 'AboutCtrl'
+      }
+    }
+  });
+  
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/home');
 
 });
 
