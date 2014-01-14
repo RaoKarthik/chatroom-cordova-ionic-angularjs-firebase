@@ -1,13 +1,5 @@
 <view title="'Home'" left-buttons="leftButtons" right-buttons="rightButtons">
-  <content
-    has-header="true"
-    has-footer="true"
-    has-tabs="true"
-    padding="true"
-    on-refresh="onRefresh()"
-             animate-nav="true"
-    >
-
+  <content has-header="true">
     <list>
       <item ng-repeat="room in rooms" type="item-text-wrap" href="#/rooms/{{room.id}}">
         <h3>{{room.title}}</h3>
