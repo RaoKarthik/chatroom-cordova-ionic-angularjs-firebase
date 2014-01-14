@@ -21,14 +21,10 @@ angular.module('chatRoom', ['ionic', 'chatRoom.services', 'chatRoom.controllers'
     }
   });
 
-  $stateProvider.state('rooms.id', {
+  $stateProvider.state('roomsid', {
     url: '/rooms/:roomId',
-    views: {
-      'rooms-id': {
-        templateUrl: 'templates/room.html',
-        controller: 'RoomCtrl'
-      }
-    }
+    templateUrl: 'templates/room.html',
+    controller: 'RoomCtrl'
   });
   
   $stateProvider.state('about', {

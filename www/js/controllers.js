@@ -51,11 +51,11 @@ angular.module('chatRoom.controllers', [])
   };
 })
 
-.controller('RoomCtrl', function($scope, $routeParams, $timeout, angularFire) {
+.controller('RoomCtrl', function($scope, $stateParams, $timeout, angularFire, $ionicScrollDelegate) {
   $scope.newMessage = "";
   $scope.messages = [];
   
-  var ref = new Firebase('https://chatroom-io.firebaseio.com/rooms/' + $routeParams.roomId);
+  var ref = new Firebase('https://chatroom-io.firebaseio.com/rooms/' + $stateParams.roomId);
   var promise = angularFire(ref, $scope, "messages");
   
   $scope.username = 'User' + Math.floor(Math.random() * 501);
@@ -66,6 +66,12 @@ angular.module('chatRoom.controllers', [])
       created_at: new Date()
     });
     this.newMessage = "";
+
+    // Scroll to the bottom
+    $ionicScrollDelegate.resize();
+    $timeout(function() {
+      $ionicScrollDelegate.scrollBottom();
+    });
   };
   
   $scope.onRefresh = function() {
