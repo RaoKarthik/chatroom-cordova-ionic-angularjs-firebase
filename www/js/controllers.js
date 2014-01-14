@@ -56,8 +56,13 @@ angular.module('chatRoom.controllers', [])
   $scope.messages = [];
   
   var ref = new Firebase('https://chatroom-io.firebaseio.com/rooms/' + $stateParams.roomId);
+  var roomPromise = angularFire(ref, $scope, 'room');
   var promise = angularFire(ref, $scope, "messages");
-  
+
+  roomPromise.then(function() {
+    console.log('Value came back', $scope.room);
+  });
+
   $scope.username = 'User' + Math.floor(Math.random() * 501);
   $scope.submitAddMessage = function() {
     $scope.messages.push({
@@ -67,17 +72,11 @@ angular.module('chatRoom.controllers', [])
     });
     this.newMessage = "";
 
-    // Scroll to the bottom
+    // Resize and then scroll to the bottom
     $ionicScrollDelegate.resize();
     $timeout(function() {
       $ionicScrollDelegate.scrollBottom();
     });
-  };
-  
-  $scope.onRefresh = function() {
-    var stop = $timeout(function() {
-      $scope.$broadcast('scroll.refreshComplete');
-    }, 1000);
   };
 })
 

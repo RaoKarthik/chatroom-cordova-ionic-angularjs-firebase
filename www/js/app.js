@@ -1,4 +1,4 @@
-angular.module('chatRoom', ['ionic', 'chatRoom.services', 'chatRoom.controllers', 'firebase'])
+angular.module('chatRoom', ['ionic', 'chatRoom.services', 'chatRoom.filters', 'chatRoom.controllers', 'firebase'])
 
 .config(function ($compileProvider){
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);

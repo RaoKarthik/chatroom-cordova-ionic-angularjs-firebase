@@ -1,9 +1,8 @@
-<view title="title">
+<view title="room.title">
   <content
     has-header="true"
     has-footer="true"
     scroll="true"
-    padding="true"
     on-refresh="onRefresh()"
     on-refresh-opening="onRefreshOpening(amount)"
     refresh-complete="refreshComplete"
@@ -11,15 +10,11 @@
     >
 
     <div ng-repeat="message in messages" type="item-text-wrap">    
-      <div class="card item-message">
-        <div class="item-message-header">
-          <div class="row">
-            <small class="col">{{message.created_by}}:</small>
-            <small class="col text-right">{{message.created_at | date: 'short' }}</small>
-          </div>
-        </div>
-        <div class="item-message-body item-text-wrap">
-          {{message.content}}
+      <div class="item item-body message">
+        <div class="row">
+          <div class="col col-10 author">{{message.created_by}}</div>
+          <div class="col content">{{message.content}}</div>
+          <div class="col col-10 time">{{message.created_at | dateToday: 'short' }}</div>
         </div>
       </div>
     </div>
