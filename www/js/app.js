@@ -11,7 +11,7 @@ angular.module('chatRoom', ['ionic', 'chatRoom.services', 'chatRoom.filters', 'c
     controller: 'MainCtrl'
   });
 
-  $stateProvider.state('rooms.new', {
+  $stateProvider.state('newroom', {
     url: '/rooms/new',
     views: {
       'rooms-new': {

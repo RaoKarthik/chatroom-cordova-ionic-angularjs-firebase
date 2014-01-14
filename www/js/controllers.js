@@ -1,18 +1,17 @@
 angular.module('chatRoom.controllers', [])
 
-.controller('AppCtrl', function($scope, $location) {
+.controller('AppCtrl', function($scope, $state) {
   $scope.goToNewRoom = function() {
-    $location.path('/rooms/new');
-    $scope.toggleSideMenu();
+    $state.transitionTo('newroom');
   };
   
   $scope.goToAbout = function() {
-    $location.path('/about');
+    $state.transitionTo('about');
     $scope.toggleSideMenu();
   };
   
   $scope.goToHome = function() {
-    $location.path('/home');
+    $state.transitionTo('home');
   };  
     
   $scope.toggleSideMenu = function() {
@@ -24,6 +23,32 @@ angular.module('chatRoom.controllers', [])
   $scope.rooms = [];
   var ref = new Firebase('https://chatroom-io.firebaseio.com/opened_rooms');  
   var promise = angularFire(ref, $scope, "rooms");
+
+  $scope.leftButtons = [
+    {
+      type: 'button-icon',
+      content: '<i class="icon ion-navicon"></i>',
+      tap: function(e) {
+        $scope.toggleSideMenu();
+      }
+    }
+  ];
+  $scope.rightButtons = [
+    {
+      type: 'button-icon',
+      content: '<i class="icon ion-plus"></i>',
+      tap: function(e) {
+      }
+    }
+  ];
+  /*
+  <!-- where the content of each page will be rendered -->
+  <header class="bar bar-header bar-calm">
+    <button class="button button-icon" ng-click="toggleSideMenu()"><i class="icon ion-navicon"></i></button>
+    <h1 class="title">Lobby</h1>
+    <button class="button button-icon" ng-click="goToNewRoom()"><i class="icon ion-plus"></i></button>
+  </header>
+  */
 })
 
 .controller('NewRoomCtrl', function($scope, $location, angularFire) {      
@@ -59,8 +84,17 @@ angular.module('chatRoom.controllers', [])
   var roomPromise = angularFire(ref, $scope, 'room');
   var promise = angularFire(ref, $scope, "messages");
 
+  var scrollBottom = function() {
+    // Resize and then scroll to the bottom
+    $ionicScrollDelegate.resize();
+    $timeout(function() {
+      $ionicScrollDelegate.scrollBottom();
+    });
+  };
+
   roomPromise.then(function() {
     console.log('Value came back', $scope.room);
+    scrollBottom();
   });
 
   $scope.username = 'User' + Math.floor(Math.random() * 501);
@@ -72,11 +106,7 @@ angular.module('chatRoom.controllers', [])
     });
     this.newMessage = "";
 
-    // Resize and then scroll to the bottom
-    $ionicScrollDelegate.resize();
-    $timeout(function() {
-      $ionicScrollDelegate.scrollBottom();
-    });
+    scrollBottom();
   };
 })
 

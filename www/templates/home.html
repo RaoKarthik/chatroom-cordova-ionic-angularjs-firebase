@@ -1,10 +1,4 @@
-<view title="'Home'">
-  <!-- where the content of each page will be rendered -->
-  <header class="bar bar-header bar-calm">
-    <button class="button button-icon" ng-click="toggleSideMenu()"><i class="icon ion-navicon"></i></button>
-    <h1 class="title">Lobby</h1>
-    <button class="button button-icon" ng-click="goToNewRoom()"><i class="icon ion-plus"></i></button>
-  </header>
+<view title="'Home'" left-buttons="leftButtons" right-buttons="rightButtons">
   <content
     has-header="true"
     has-footer="true"
