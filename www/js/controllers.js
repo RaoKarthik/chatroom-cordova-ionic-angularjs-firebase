@@ -58,7 +58,7 @@ angular.module('chatRoom.controllers', [])
   $scope.leftButtons = [
     { 
       type: 'button-energized',
-      content: '<i class="icon ion-home></i>',
+      content: '<i class="icon ion-arrow-left-c"></i>',
       tap: function(e) {
         $location.path('/');
       }
