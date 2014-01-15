@@ -5,17 +5,24 @@ angular.module('chatRoom', ['ionic', 'chatRoom.services', 'chatRoom.filters', 'c
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider.state('home', {
+  $stateProvider.state('Home', {
     url: '/home',
     templateUrl: 'templates/home.html',
-    controller: 'MainCtrl'
+    controller: 'RoomListCtrl'
   });
 
-  $stateProvider.state('roomsid', {
+  $stateProvider.state('roomsId', {
     url: '/rooms/:roomId',
     templateUrl: 'templates/room.html',
     controller: 'RoomCtrl'
   });
+
+  $stateProvider.state('newRoom', {
+    url: '/new',
+    templateUrl: 'templates/new_room.html',
+    controller: 'RoomCreateCtrl'
+  });
+
   
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/home');

@@ -1,41 +1,69 @@
 angular.module('chatRoom.controllers', [])
 
-.controller('AppCtrl', function($scope, $state) {
+.controller('RoomListCtrl', function($scope, $timeout, $firebase, $location) {
+  var ref = new Firebase('https://chatroom-io.firebaseio.com/opened_rooms');  
+  $scope.rooms = $firebase(ref);
+
+  $scope.rightButtons = [
+    {
+      type: 'button-energized',
+      content: '<i class="icon ion-plus"></i>',
+      tap: function(e) {
+        $location.path("/new");
+      }
+    }
+  ];
 })
 
-.controller('MainCtrl', function($scope, $timeout, angularFire) {
-  $scope.rooms = [];
+.controller('RoomCreateCtrl', function($scope, $timeout, $firebase, $location) {
   var ref = new Firebase('https://chatroom-io.firebaseio.com/opened_rooms');  
-  var promise = angularFire(ref, $scope, "rooms");
+  $scope.rooms = $firebase(ref);
 
-  $scope.createRoom = function(roomName) {
-    $scope.rooms.push({
-      id: Math.floor(Math.random() * 5000001),
+  $scope.createRoom = function(roomName, roomDescription) {
+    if (!roomName) return;
+      
+    var roomId = Math.floor(Math.random() * 5000001);
+      
+    $scope.rooms.$add({
+      id: roomId,
       title: roomName,
-      slug: roomName.split(/\s+/g).join('-')
+      slug: roomName.split(/\s+/g).join('-'),
+      description: roomDescription
     });
+    
+    $location.path('/rooms/' + roomId);
   };
 
   $scope.rightButtons = [
     {
-      type: 'button-icon',
+      type: 'button-energized',
       content: '<i class="icon ion-plus"></i>',
       tap: function(e) {
-        var roomName = prompt('New room name');
-        $scope.createRoom(roomName);
+        $location.path("/new");
       }
     }
   ];
 })
 
 
-.controller('RoomCtrl', function($scope, $stateParams, $timeout, angularFire, $ionicScrollDelegate) {
+.controller('RoomCtrl', function($scope, $stateParams, $timeout, $firebase, $location, $ionicScrollDelegate) {
+  var roomRef = new Firebase('https://chatroom-io.firebaseio.com/opened_rooms/');
+  var messagesRef = new Firebase('https://chatroom-io.firebaseio.com/rooms/' + $stateParams.roomId);
+
   $scope.newMessage = "";
-  $scope.messages = [];
-  
-  var ref = new Firebase('https://chatroom-io.firebaseio.com/rooms/' + $stateParams.roomId);
-  var roomPromise = angularFire(ref, $scope, 'room');
-  var promise = angularFire(ref, $scope, "messages");
+  $scope.roomsObj = $firebase(roomRef);
+  $scope.messagesObj = $firebase(messagesRef);
+  $scope.username = 'User' + Math.floor(Math.random() * 501);
+
+  $scope.leftButtons = [
+    { 
+      type: 'button-energized',
+      content: '<i class="icon ion-home></i>',
+      tap: function(e) {
+        $location.path('/');
+      }
+    }
+  ]
 
   var scrollBottom = function() {
     // Resize and then scroll to the bottom
@@ -45,14 +73,34 @@ angular.module('chatRoom.controllers', [])
     });
   };
 
-  roomPromise.then(function() {
-    console.log('Value came back', $scope.room);
-    scrollBottom();
-  });
+  $scope.$watch('messagesObj', function (value) {
+    var messagesObj = angular.fromJson(angular.toJson(value));
+    $timeout(function () {scrollBottom()});
+    $scope.messages = [];
 
-  $scope.username = 'User' + Math.floor(Math.random() * 501);
+    angular.forEach(messagesObj, function (message, key) {
+      $scope.messages.push(message);
+    });
+
+    if ($scope.messages.length) {
+      loaded = true;
+    }
+  }, true);
+
+  $scope.$watch('roomsObj', function (value) {
+    var roomsObj = angular.fromJson(angular.toJson(value));
+    $scope.room = false;
+
+    angular.forEach(roomsObj, function (room, key) {
+      if ($scope.room) return;
+      if (room.id == $stateParams.roomId) {
+        $scope.room = room;
+      };
+    });
+  }, true);
+    
   $scope.submitAddMessage = function() {
-    $scope.messages.push({
+    $scope.messagesObj.$add({
       created_by: this.username,
       content: this.newMessage,
       created_at: new Date()
@@ -63,5 +111,5 @@ angular.module('chatRoom.controllers', [])
   };
 })
 
-.controller('AboutCtrl', function($scope) {
-});
+.controller('AboutCtrl', function($scope) {})
+.controller('AppCtrl', function($scope, $state) {});
